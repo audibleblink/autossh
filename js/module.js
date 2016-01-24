@@ -1,35 +1,61 @@
 registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) {
 
-    $scope.greeting = ""
-    $scope.content = ""
-
+  $scope.isRunning = false
+  $scope.isEnabled = false
+  $scope.getStatus = function () {
     $api.request({
-        module: 'autossh',
-        action: 'getContents'
+      module: 'autossh',
+      action: 'status'
     }, function(response) {
-        if (response.success === true) {
-            $scope.greeting = response.greeting
-            $scope.content = response.content
-        }
-        console.log(response)
+      if (response.success) {
+        $scope.isRunning = response.isRunning
+        $scope.isRunning = response.isEnabled
+      }
+      console.log(response)
     })
-}])
+  }
 
-//-
+  $scope.getStatus()
 
-registerController('autosshConfigCtrl', ['$api', '$scope', function($api, $scope) {
-
-    $scope.greeting = ""
-    $scope.content = ""
-
+  $scope.startAutossh = function () {
     $api.request({
-        module: 'autossh',
-        action: 'getContents'
-    }, function(response) {
-        if (response.success === true) {
-            $scope.greeting = response.greeting
-            $scope.content = response.content
-        }
-        console.log(response)
+      module: 'autossh',
+      action: 'startAutossh'
+    }, function (response) {
+      console.log(response);
+      $scope.getStatus()
     })
+  }
+
+  $scope.stopAutossh = function () {
+    $api.request({
+      module: 'autossh',
+      action: 'stopAutossh'
+    }, function (response) {
+      console.log(response);
+      $scope.getStatus()
+    })
+  }
+
+  $scope.enableAutossh = function () {
+    $api.request({
+      module: 'autossh',
+      action: 'enableAutossh'
+    }, function (response) {
+      console.log(response);
+      $scope.getStatus()
+    })
+  }
+
+  $scope.disableAutossh = function () {
+    $api.request({
+      module: 'autossh',
+      action: 'disableAutossh'
+    }, function (response) {
+      console.log(response);
+      $scope.getStatus()
+    })
+  }
+
+
 }])

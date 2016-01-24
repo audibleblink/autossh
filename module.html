@@ -18,7 +18,8 @@
             <tr class="form-inline">
               <td class="text-muted">autossh</td>
               <td>
-                <button type="button" class="btn btn-sm btn-primary pull-right" ng-disabled="starting" ng-click="toggleautossh()">Start</button>
+                <button ng-show="isRunning" type="button" class="btn btn-sm btn-danger pull-right" ng-disabled="starting" ng-click="stopAutossh()">Stop</button>
+                <button ng-hide="isRunning" type="button" class="btn btn-sm btn-primary pull-right" ng-disabled="starting" ng-click="startAutossh()">Start</button>
               </td>
             </tr>
 
@@ -26,8 +27,8 @@
               <td class="text-muted">Autostart</td>
               <td>
                 <div class="btn-group pull-right">
-                  <button ng-click="toggleautosshOnBoot()" class="btn btn-sm btn-default">ON</button>
-                  <button ng-click="toggleautosshOnBoot()" class="btn btn-sm btn-danger">OFF</button>
+                  <button ng-click="enableAutossh()" ng-class="isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-sm">I</button>
+                  <button ng-click="disableAutossh()" ng-class="isEnabled ? 'btn-danger' : 'btn-default'" class="btn btn-sm">0</button>
                 </div>
               </td>
             </tr>
@@ -40,7 +41,7 @@
   </div>
 
   <div class="col-md-8">
-    <div class="panel panel-default" style="min-height:184px" ng-controller="autosshConfigCtrl">
+    <div class="panel panel-default" style="min-height:184px">
 
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -54,14 +55,20 @@
           <div class="row" style="margin-bottom: 1.4em">
 
             <div class="col-md-12">
-              <div class="col-md-8">
+
+              <div class="col-md-3">
+                <input type="text" class="form-control" placeholder="Username">
+              </div>
+
+              <div class="col-md-6">
                 <input type="text" class="form-control" placeholder="Hostname or IP">
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <input type="text" class="form-control" placeholder="Remote SSH Port">
               </div>
             </div>
+
           </div>
 
           <div class="row" style="margin-bottom: 1.4em">
@@ -106,10 +113,10 @@
       <div class="panel-body">
 
         <div class="form-group">
-          <div class="input-group">
+          <samp class="input-group">
             <span class="input-group-addon input-sm">Command that runs</span>
             <input type="text" class="form-control input-sm" ng-model="command" placeholder="autossh command">
-          </div>
+          </samp>
         </div>
 
 
