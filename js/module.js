@@ -1,18 +1,35 @@
-/* This is our AngularJS controller, called "ExampleController". */
-registerController('ExampleController', ['$api', '$scope', function($api, $scope) {
-    /* It is good practice to 'initialize' your variables with nothing */
-    $scope.greeting = "";
-    $scope.content = "";
+registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) {
 
-    /* Use the API to send a request to your module.php */
+    $scope.greeting = ""
+    $scope.content = ""
+
     $api.request({
-        module: 'autossh', //Your module name
-        action: 'getContents'   //Your action defined in module.php
+        module: 'autossh',
+        action: 'getContents'
     }, function(response) {
-        if (response.success === true) {           //If the response has an index called "success" that returns the boolean "true", then:
-            $scope.greeting = response.greeting;   // Set the variable $scope.greeting to the response index "greeting"
-            $scope.content = response.content;     // Set the variable $scope.content to the response index "content".
+        if (response.success === true) {
+            $scope.greeting = response.greeting
+            $scope.content = response.content
         }
-        console.log(response) //Log the response to the console, this is useful for debugging.
-    });
-}]);
+        console.log(response)
+    })
+}])
+
+//-
+
+registerController('autosshConfigCtrl', ['$api', '$scope', function($api, $scope) {
+
+    $scope.greeting = ""
+    $scope.content = ""
+
+    $api.request({
+        module: 'autossh',
+        action: 'getContents'
+    }, function(response) {
+        if (response.success === true) {
+            $scope.greeting = response.greeting
+            $scope.content = response.content
+        }
+        console.log(response)
+    })
+}])

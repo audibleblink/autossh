@@ -1,14 +1,91 @@
-<!-- This HTML has bootstrap classes such as "col-md-12" and "jumbotron". For more information, see http://getbootstrap.com/css/ -->
-<!-- This HTML makes use of AngularJS data-bindings and controllers. For more information, see https://docs.angularjs.org/api/ -->
-<!-- Don't forget to look at the module.js and module.php files too! -->
-<!-- This HTML is a template for generated modules via the Module Maker. -->
-
-<div class="col-md-12" ng-controller="ExampleController"> <!-- This special argument wires the HTML to your controller (in module.js) -->
-	<div class="jumbotron" style="border-radius: 7px;">
-		<div class="container">
-			<h1>{{ greeting }}</h1> <!-- This is an AngularJS data binding -->
-			<p>{{ content }}</p>    <!-- They represent the $scope.xxxxx inside of your module.js -->
-		</div>
-	</div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <div class="panel-title">
+      <div class="h4"> autossh </div>
+    </div>
+  </div>
 </div>
 
+<div class="row">
+  <div class="col-md-4">
+    <div class="panel panel-default" ng-controller="autosshMainCtrl">
+
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Control
+        </h3>
+      </div>
+
+      <div class="panel-body">
+        <table class="table">
+          <tbody>
+
+            <tr class="form-inline">
+              <td style="padding-bottom: .5em;" class="text-muted">autossh</td>
+              <td style="text-align:right;padding-bottom: .5em;">
+                <button type="button" class="btn btn-sm btn-primary" ng-disabled="starting" ng-click="toggleautossh()">Start</button>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding-bottom: .5em;" class="text-muted">Start on boot</td>
+              <td style="text-align:right;padding-bottom: .5em;">
+                <div class="btn-group">
+                  <button ng-click="toggleautosshOnBoot()" class="btn btn-xs btn-default">ON</button>
+                  <button ng-click="toggleautosshOnBoot()" class="btn btn-xs btn-danger">OFF</button>
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="panel panel-default" ng-controller="autosshConfigCtrl">
+
+      <div class="panel-heading">
+        <h3 class="panel-title">
+          Configure
+        </h3>
+      </div>
+
+      <div class="panel-body">
+
+        <form class="" action="index.html" method="post">
+
+          <div class="form-group">
+            <label for="host">Host</label>
+            <input type="text" class="form-control" placeholder="Hostname or IP">
+          </div>
+
+          <div class="form-group">
+            <label for="port">Port</label>
+            <input type="number" class="form-control" placeholder="Port remote host's sshd is listening on">
+          </div>
+
+          <div class="form-group">
+            <label for="local-port">Local Port</label>
+            <input type="number" class="form-control" placeholder="Defult: 22 -- Port the Pineapple's sshd is listening on">
+          </div>
+
+          <div class="form-group">
+            <label for="remote-port">Remote Port</label>
+            <input type="number" class="form-control" placeholder="Default: 2222 -- Port to bind the Pineapple's sshd to on the remote host">
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
+
+      </div>
+
+
+    </div>
+  </div>
+
+
+</div>
