@@ -27,8 +27,8 @@
               <td class="text-muted">Autostart</td>
               <td>
                 <div class="btn-group pull-right">
-                  <button ng-click="enableAutossh()" ng-class="isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-sm">I</button>
-                  <button ng-click="disableAutossh()" ng-class="isEnabled ? 'btn-danger' : 'btn-default'" class="btn btn-sm">0</button>
+                  <button ng-click="enableAutossh()" ng-class="!isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-sm">I</button>
+                  <button ng-click="disableAutossh()" ng-class="!isEnabled ? 'btn-danger' : 'btn-default disabled'" class="btn btn-sm">0</button>
                 </div>
               </td>
             </tr>

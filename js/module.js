@@ -9,7 +9,7 @@ registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) 
     }, function(response) {
       if (response.success) {
         $scope.isRunning = response.isRunning
-        $scope.isRunning = response.isEnabled
+        $scope.isEnabled = response.isEnabled
       }
       console.log(response)
     })
