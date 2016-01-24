@@ -32,14 +32,14 @@ registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) 
   $scope.disableAutossh = function () {
     apiCaller("disableAutossh")
   }
-  
-  function setState (response) {
+
+  function handler (response) {
     console.log(response)
     $scope.getStatus()
   }
 
   function apiCaller (action) {
-    $api.request({ module: 'autossh', action: action }, setState)
+    $api.request({ module: 'autossh', action: action }, handler)
   }
 
 }])

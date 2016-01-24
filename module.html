@@ -99,26 +99,25 @@
 
 </div>
 
-<div class="row">
 
+  <div class="form-group">
+    <samp class="input-group">
+      <span class="input-group-addon input-sm">Command that runs</span>
+      <input type="text" class="form-control input-sm" ng-model="command" placeholder="autossh command">
+    </samp>
+  </div>
+
+  <div class="row">
   <div class="col-md-12">
     <div class="panel panel-default">
 
-      <div class="panel-heading" data-toggle="collapse" data-target="Infomation">
+      <div class="panel-heading" data-toggle="collapse" data-target="#info">
         <h3 class="panel-title">
         Information
       </h3>
       </div>
 
-      <div class="panel-body">
-
-        <div class="form-group">
-          <samp class="input-group">
-            <span class="input-group-addon input-sm">Command that runs</span>
-            <input type="text" class="form-control input-sm" ng-model="command" placeholder="autossh command">
-          </samp>
-        </div>
-
+      <div class="panel-body collapse" id="info">
 
         <dl>
           <dt>Hostname or IP</dt>
