@@ -18,44 +18,28 @@ registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) 
   $scope.getStatus()
 
   $scope.startAutossh = function () {
-    $api.request({
-      module: 'autossh',
-      action: 'startAutossh'
-    }, function (response) {
-      console.log(response);
-      $scope.getStatus()
-    })
+    apiCaller("startAutossh")
   }
 
   $scope.stopAutossh = function () {
-    $api.request({
-      module: 'autossh',
-      action: 'stopAutossh'
-    }, function (response) {
-      console.log(response);
-      $scope.getStatus()
-    })
+    apiCaller("stopAutossh")
   }
 
   $scope.enableAutossh = function () {
-    $api.request({
-      module: 'autossh',
-      action: 'enableAutossh'
-    }, function (response) {
-      console.log(response);
-      $scope.getStatus()
-    })
+    apiCaller("enableAutossh")
   }
 
   $scope.disableAutossh = function () {
-    $api.request({
-      module: 'autossh',
-      action: 'disableAutossh'
-    }, function (response) {
-      console.log(response);
-      $scope.getStatus()
-    })
+    apiCaller("disableAutossh")
+  }
+  
+  function setState (response) {
+    console.log(response)
+    $scope.getStatus()
   }
 
+  function apiCaller (action) {
+    $api.request({ module: 'autossh', action: action }, setState)
+  }
 
 }])
