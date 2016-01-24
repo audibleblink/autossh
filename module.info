@@ -1,0 +1,6 @@
+{
+    "title": "autossh",
+    "description": "Persistant SSH connections",
+    "version": "0.1",
+    "author": "audibleblink"
+}
