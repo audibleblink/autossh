@@ -41,7 +41,7 @@
   </div>
 
   <div class="col-md-8">
-    <div class="panel panel-default" style="min-height:184px">
+    <div class="panel panel-default" style="min-height:184px" ng-controller="autosshConfCtrl">
 
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -51,21 +51,21 @@
 
       <div class="panel-body">
 
-        <form class="form-horizontal" action="index.html" method="post">
+        <form class="form-horizontal" ng-submit="writeConf()">
           <div class="row" style="margin-bottom: 1.4em">
 
             <div class="col-md-12">
 
               <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Username">
+                <input type="text" class="form-control" placeholder="Username" ng-model=formData.user>
               </div>
 
               <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Hostname or IP">
+                <input type="text" class="form-control" placeholder="Hostname or IP" ng-model=formData.host>
               </div>
 
               <div class="col-md-3">
-                <input type="text" class="form-control" placeholder="Remote SSH Port">
+                <input type="text" class="form-control" placeholder="Remote SSH Port" ng-model=formData.port>
               </div>
             </div>
 
@@ -75,11 +75,11 @@
 
             <div class="col-md-12">
               <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Remote Listening Port">
+                <input type="text" class="form-control" placeholder="Remote Listening Port" ng-model=formData.rport>
               </div>
 
               <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Local SSH Port">
+                <input type="text" class="form-control" placeholder="Local SSH Port" ng-model=formData.lport>
               </div>
 
               <div class="col-md-4">
@@ -100,14 +100,14 @@
 </div>
 
 
-  <div class="form-group">
-    <samp class="input-group">
+<div class="form-group">
+  <samp class="input-group">
       <span class="input-group-addon input-sm">Command that runs</span>
       <input type="text" class="form-control input-sm" ng-model="command" placeholder="autossh command">
     </samp>
-  </div>
+</div>
 
-  <div class="row">
+<div class="row">
   <div class="col-md-12">
     <div class="panel panel-default">
 
