@@ -87,18 +87,13 @@ class autossh extends Module
   {
     $args = $this->request->data;
     $location = "/etc/config/autossh.test";
-    $config = $this->buildCommand($args);
-    $command = "sed \"2s|.*|$config|\" /rom/etc/config/autossh > $location";
-    exec($command);
+    $config = $this->buildOptionString($args);
+    $cmd = "sed \"2s|.*|$config|\" /rom/etc/config/autossh > $location";
+    exec($cmd);
   }
 
-  private function createSshKey()
-  {
-    $path = "/root/.ssh/id_rsa.autossh";
-    exec("ssh-keygen -f $path -t rsa -N ''");
-  }
 
-  private function buildCommand($args)
+  private function buildOptionString($args)
   {
     return "option ssh '-i /root/.ssh/id_rsa.autossh -N -T -R 0.0.0.0:$args->rport:localhost:$args->lport $args->user@$args->host -p $args->port'";
   }
