@@ -1,3 +1,10 @@
+// TODO: makes Service from API caller
+// TODO: creating 'now loading' variables to allow spinners in the GUI
+// TODO: make a dynamic handler function in Service
+// TODO: update known_hosts well on config save (GUI / backend already implemented)
+// TODO: remove unnecessary console loggers
+// TODO: implement 'command will run' bar : global scope?
+
 registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) {
 
   $scope.isRunning = false

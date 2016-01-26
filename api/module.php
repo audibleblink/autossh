@@ -1,4 +1,6 @@
 <?php namespace pineapple;
+// TODO: remove '.test' from file paths before release
+
 
 class autossh extends Module
 {
