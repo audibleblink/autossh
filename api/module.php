@@ -32,8 +32,47 @@ class autossh extends Module
       case 'writeConf':
       $this->writeConf();
       break;
+
+
+      case 'getInfo':
+      $this->getInfo();
+      break;
     }
   }
+
+// Initial Setup
+  private function createSshKey()
+  {
+    $path = "/root/.ssh/id_rsa.autossh";
+    exec("ssh-keygen -f $path -t rsa -N ''");
+  }
+
+  private function addKnownHosts()
+  {
+    $params = $this->request->hostInfo;
+    $cmd = "ssh -o StrictHostKeyChecking=no -p $params->port $params->user@$params->host";
+    exec($cmd);
+    $this->response = array("success" => true);
+  }
+
+  private function getInfo()
+  {
+    $hosts = $this->safeRead('/root/.ssh/known_hosts');
+    $key = $this->safeRead('/root/.ssh/id_rsa.autossh.pub');
+    $this->response = array(
+      "success" => true,
+      "pubKey" => $key,
+      "knownHosts" => $hosts
+    );
+  }
+
+  private function safeRead($file)
+  {
+    return file_exists($file) ? file_get_contents($file) : "";
+  }
+
+
+
 
 // Configuration
   private function readConf()

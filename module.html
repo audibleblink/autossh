@@ -141,3 +141,46 @@
     </div>
   </div>
 </div>
+
+
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default" ng-controller="firstRunCtrl">
+
+      <div class="panel-heading" data-toggle="collapse" data-target="#first-run">
+        <h3 class="panel-title">
+        First Run Configuration
+      </h3>
+      </div>
+
+      <div class="panel-body collapse" id="first-run">
+
+        <div class="col-md-6">
+          <div class="key-pair" ng-hide="pubKey">
+            <div class="h4"> Generate Key Pairs </div>
+            <button type="button" class="btn btn-primary"></button>
+
+          </div>
+
+          <div class="key-pair" ng-show="pubKey">
+            <div class="h4"> Your Public Key </div>
+            <pre style="white-space:normal;">{{pubKey}}</pre>
+
+            <div class="h5"> Append it to your server </div>
+            <form ng-submit="appendKey()">
+
+            </form>
+          </div>
+        </div>
+
+
+        <div class="col-md-6">
+          <div class="h4"> Append Known Hosts </div>
+          <pre style="white-space:normal;">{{knownHosts}}</pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

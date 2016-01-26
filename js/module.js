@@ -77,3 +77,28 @@ registerController('autosshConfCtrl', ['$api', '$scope', function($api, $scope) 
   }
 
 }])
+
+
+registerController('firstRunCtrl', ['$api', '$scope', function($api, $scope) {
+
+  $scope.pubKey = ""
+  $scope.knownHosts = ""
+
+  $scope.getInfo = function () {
+    apiCaller('getInfo', function(response) {
+      if (response.success) {
+        $scope.pubKey  = response.pubKey
+        $scope.knownHosts  = response.knownHosts
+        $scope.keyExists = response.keyExists
+      }
+      console.log(response)
+    })
+  }
+  $scope.getInfo()
+
+
+  function apiCaller (action, cb) {
+    $api.request({ module: 'autossh', action: action }, cb)
+  }
+
+}])
