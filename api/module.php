@@ -4,39 +4,23 @@ class autossh extends Module
 {
   public function route()
   {
-    switch ($this->request->action) {
-      case 'status':
-      $this->status();
-      break;
+    $actions = array(
+      'status',
+      'getInfo',
+      'stopAutossh',
+      'startAutossh',
+      'enableAutossh',
+      'disableAutossh',
+      'readConf',
+      'writeConf',
+      'resetConf',
+      'createSshKey',
+    );
 
-      case 'startAutossh':
-      $this->startAutossh();
-      break;
-
-      case 'stopAutossh':
-      $this->stopAutossh();
-      break;
-
-      case 'enableAutossh':
-      $this->enableAutossh();
-      break;
-
-      case 'disableAutossh':
-      $this->disableAutossh();
-      break;
-
-      case 'readConf':
-      $this->readConf();
-      break;
-
-      case 'writeConf':
-      $this->writeConf();
-      break;
-
-
-      case 'getInfo':
-      $this->getInfo();
-      break;
+    foreach ($actions as $action) {
+      if ($this->request->action == $action) {
+        eval("\$this->$action();");
+      }
     }
   }
 
@@ -45,24 +29,26 @@ class autossh extends Module
   {
     $path = "/root/.ssh/id_rsa.autossh";
     exec("ssh-keygen -f $path -t rsa -N ''");
+    if (file_exists($path)) {
+      $this->response = array("success" => true);
+    }
   }
 
-  private function addKnownHosts()
+  private function ensureKnownHosts($args)
   {
-    $params = $this->request->hostInfo;
-    $cmd = "ssh -o StrictHostKeyChecking=no -p $params->port $params->user@$params->host";
+    $cmd = "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -p $args->port $args->user@$args->host";
     exec($cmd);
-    $this->response = array("success" => true);
+    if (file_exists('/root/.ssh/known_hosts')) {
+      $this->response = array("success" => true);
+    }
   }
 
   private function getInfo()
   {
-    $hosts = $this->safeRead('/root/.ssh/known_hosts');
-    $key = $this->safeRead('/root/.ssh/id_rsa.autossh.pub');
     $this->response = array(
       "success" => true,
-      "pubKey" => $key,
-      "knownHosts" => $hosts
+      "pubKey" => $this->safeRead('/root/.ssh/id_rsa.autossh.pub'),
+      "knownHosts" => shell_exec("awk '{print $1}' /root/.ssh/known_hosts")
     );
   }
 
@@ -73,14 +59,24 @@ class autossh extends Module
 
 
 
-
 // Configuration
   private function readConf()
   {
+    $conf = $this->parsedConfig() + array("success" => true);
+    $this->response = $conf;
+  }
+
+  private function resetConf()
+  {
+    exec("cp /rom/etc/config/autossh /etc/config/autossh.test");
+    return $this->response = $this->parsedConfig() + array("success" => true);
+  }
+
+  private function parsedConfig()
+  {
     $contents = file("/etc/config/autossh.test");
     $args = preg_split("/\s|\t|:|@|'/", $contents[1]);
-
-    return $this->response = $this->parseArguments(array_filter($args));
+    return $this->parseArguments(array_filter($args));
   }
 
   private function writeConf()
@@ -88,10 +84,11 @@ class autossh extends Module
     $args = $this->request->data;
     $location = "/etc/config/autossh.test";
     $config = $this->buildOptionString($args);
+    $this->ensureKnownHosts($args);
     $cmd = "sed \"2s|.*|$config|\" /rom/etc/config/autossh > $location";
     exec($cmd);
+    $this->response = array("success" => true);
   }
-
 
   private function buildOptionString($args)
   {
@@ -102,13 +99,12 @@ class autossh extends Module
   private function parseArguments($args)
   {
     return array(
+      "user" => $args[12],
       "host" => $args[13],
-      "keyFile" => $args[5],
+      "port" => (!$args[15]) ? "22" : $args[15],
       "rport" => $args[9],
       "lport" => $args[11],
-      "user" => $args[12],
-      "port" => (!$args[15]) ? "22" : $args[15],
-      "success" => true
+      "keyFile" => $args[5],
     );
   }
 
@@ -140,24 +136,28 @@ class autossh extends Module
   private function startAutossh()
   {
     exec("/etc/init.d/autossh start");
+    $this->response = array("success" => true);
   }
 
 
   private function stopAutossh()
   {
     exec("/etc/init.d/autossh stop");
+    $this->response = array("success" => true);
   }
 
 
   private function enableAutossh()
   {
     exec("/etc/init.d/autossh enable");
+    $this->response = array("success" => true);
   }
 
 
   private function disableAutossh()
   {
     exec("/etc/init.d/autossh disable");
+    $this->response = array("success" => true);
   }
 
 

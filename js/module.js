@@ -29,10 +29,13 @@ registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) 
     apiCaller("disableAutossh", handler)
   }
 
-
   function handler (response) {
-    console.log(response)
-    $scope.getStatus()
+    if (response.success) {
+      console.log(response)
+      $scope.getStatus()
+    } else {
+      console.error(response)
+    }
   }
 
   function apiCaller (action, cb) {
@@ -67,9 +70,18 @@ registerController('autosshConfCtrl', ['$api', '$scope', function($api, $scope) 
     }, handler)
   }
 
+  $scope.resetConf = function () {
+    apiCaller("resetConf", handler)
+  }
+
 
   function handler (response) {
-    console.log(response)
+    if (response.success) {
+      console.log(response)
+      $scope.readConf()
+    } else {
+      console.error(response)
+    }
   }
 
   function apiCaller (action, cb) {
@@ -83,6 +95,8 @@ registerController('firstRunCtrl', ['$api', '$scope', function($api, $scope) {
 
   $scope.pubKey = ""
   $scope.knownHosts = ""
+  $scope.sshCopyCommand=""
+  $scope.generatingKeys=false
 
   $scope.getInfo = function () {
     apiCaller('getInfo', function(response) {
@@ -96,6 +110,24 @@ registerController('firstRunCtrl', ['$api', '$scope', function($api, $scope) {
   }
   $scope.getInfo()
 
+  apiCaller("readConf", function (resp) {
+    $scope.sshCopyCommand = "cat ~/.ssh/id_rsa.autossh.pub | \
+    ssh -p "+resp.port+" "+resp.user+"@"+resp.host+" \
+    'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'"
+  })
+
+  $scope.createSshKey = function () {
+    $scope.generatingKeys=true
+    apiCaller("createSshKey", function(response) {
+      $scope.generatingKeys=false
+      if (response.success) {
+        console.log(response)
+        $scope.getInfo()
+      } else {
+        console.error(response)
+      }
+    })
+  }
 
   function apiCaller (action, cb) {
     $api.request({ module: 'autossh', action: action }, cb)
