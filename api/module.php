@@ -4,24 +4,50 @@ class autossh extends Module
 {
   public function route()
   {
-    $actions = array(
-      'status',
-      'getInfo',
-      'stopAutossh',
-      'startAutossh',
-      'enableAutossh',
-      'disableAutossh',
-      'readConf',
-      'writeConf',
-      'resetConf',
-      'createSshKey',
-    );
 
-    foreach ($actions as $action) {
-      if ($this->request->action == $action) {
-        eval("\$this->$action();");
-      }
+    switch ($this->request->action) {
+      case 'status':
+      $this->status();
+      break;
+
+      case 'getInfo':
+      $this->getInfo();
+      break;
+
+      case 'stopAutossh':
+      $this->stopAutossh();
+      break;
+
+      case 'startAutossh':
+      $this->startAutossh();
+      break;
+
+      case 'enableAutossh':
+      $this->enableAutossh();
+      break;
+
+      case 'disableAutossh':
+      $this->disableAutossh();
+      break;
+
+      case 'readConf':
+      $this->readConf();
+      break;
+
+      case 'writeConf':
+      $this->writeConf();
+      break;
+
+      case 'resetConf':
+      $this->resetConf();
+      break;
+
+      case 'createSshKey':
+      $this->createSshKey();
+      break;
+
     }
+
   }
 
 // Initial Setup
@@ -37,7 +63,7 @@ class autossh extends Module
   private function ensureKnownHosts($args)
   {
     $cmd = "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -p $args->port $args->user@$args->host exit";
-    exec($cmd);
+    $this->execBackground($cmd);
   }
 
   private function getInfo()
@@ -71,36 +97,35 @@ class autossh extends Module
 
   private function parsedConfig()
   {
-    $contents = file("/etc/config/autossh");
-    $args = preg_split("/\s|\t|:|@|'/", $contents[1]);
+    $uciString = "autossh.@autossh[0].ssh";
+    $contents = $this->uciGet($uciString);
+    $args = preg_split("/\s|\t|:|@|'/", $contents);
     return $this->parseArguments(array_filter($args));
   }
 
   private function writeConf()
   {
     $args = $this->request->data;
-    $location = "/etc/config/autossh";
-    $config = $this->buildOptionString($args);
+    $uciString = "autossh.@autossh[0].ssh";
+    $option = $this->buildOptionString($args);
     $this->ensureKnownHosts($args);
-    $cmd = "sed \"2s|.*|$config|\" /rom/etc/config/autossh > $location";
-    exec($cmd);
+    $this->uciSet($uciString, $option);
     $this->response = array("success" => true);
   }
 
   private function buildOptionString($args)
   {
-    return "option ssh '-i /root/.ssh/id_rsa.autossh -N -T -R 0.0.0.0:$args->rport:localhost:$args->lport $args->user@$args->host -p $args->port'";
+    return "-i /root/.ssh/id_rsa.autossh -N -T -R $args->rport:localhost:$args->lport $args->user@$args->host -p $args->port";
   }
 
-  // $args {1: "option", 2: "ssh", 4: "-i", 5: "/etc/dropbear/id_rsa", 6: "-N", 7: "-T", 8: "-R", 9: "2222", 10: "localhost", 11: "22", 12: "user", 13: "host"}
   private function parseArguments($args)
   {
     return array(
-      "user" => $args[12],
-      "host" => $args[13],
-      "port" => (!$args[15]) ? "22" : $args[15],
-      "rport" => $args[9],
-      "lport" => $args[11],
+      "user" => $args[8],
+      "host" => $args[9],
+      "port" => (!$args[11]) ? "22" : $args[11],
+      "rport" => $args[5],
+      "lport" => $args[7],
     );
   }
 
@@ -118,9 +143,8 @@ class autossh extends Module
 
   private function isRunning()
   {
-    return !!$this->pid();
+    return $this->checkRunning("autossh");
   }
-
 
   private function isEnabled()
   {
@@ -128,13 +152,11 @@ class autossh extends Module
     return file_exists($rcFile);
   }
 
-
   private function startAutossh()
   {
     exec("/etc/init.d/autossh start");
     $this->response = array("success" => true);
   }
-
 
   private function stopAutossh()
   {
@@ -142,24 +164,16 @@ class autossh extends Module
     $this->response = array("success" => true);
   }
 
-
   private function enableAutossh()
   {
     exec("/etc/init.d/autossh enable");
     $this->response = array("success" => true);
   }
 
-
   private function disableAutossh()
   {
     exec("/etc/init.d/autossh disable");
     $this->response = array("success" => true);
-  }
-
-
-  private function pid()
-  {
-    return exec("pidof autossh");
   }
 
 }
