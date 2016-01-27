@@ -18,8 +18,8 @@
             <tr class="form-inline">
               <td class="text-muted">autossh</td>
               <td>
-                <button ng-show="isRunning" type="button" class="btn btn-sm btn-danger pull-right" ng-disabled="starting" ng-click="stopAutossh()">Stop</button>
-                <button ng-hide="isRunning" type="button" class="btn btn-sm btn-primary pull-right" ng-disabled="starting" ng-click="startAutossh()">Start</button>
+                <button ng-show="isRunning" type="button" class="btn btn-sm btn-danger pull-right" ng-click="stopAutossh()">Stop</button>
+                <button ng-hide="isRunning" type="button" class="btn btn-sm btn-primary pull-right" ng-click="startAutossh()">Start</button>
               </td>
             </tr>
 
@@ -28,7 +28,7 @@
               <td>
                 <div class="btn-group pull-right">
                   <button ng-click="enableAutossh()" ng-class="!isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-sm">I</button>
-                  <button ng-click="disableAutossh()" ng-class="!isEnabled ? 'btn-danger' : 'btn-default disabled'" class="btn btn-sm">0</button>
+                  <button ng-click="disableAutossh()" ng-class="!isEnabled ? 'btn-danger' : 'btn-default'" class="btn btn-sm">0</button>
                 </div>
               </td>
             </tr>
@@ -82,7 +82,11 @@
                 <input type="text" class="form-control" placeholder="Local SSH Port" ng-model=formData.lport>
               </div>
               <div class="col-md-2">
-                <button type="submit" class="btn btn-primary btn-block">Save</button>
+                <button type="submit" class="btn btn-primary btn-block">
+                  Save
+                <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
+              </button>
+
               </div>
               <div class="col-md-2">
                 <button type="button" ng-click="resetConf()" class="btn btn-danger btn-block">Reset</button>
@@ -105,7 +109,7 @@
 <div class="form-group">
   <samp class="input-group">
       <span class="input-group-addon input-sm">Command that runs</span>
-      <input type="text" class="form-control input-sm" ng-model="command" placeholder="autossh command">
+      <input type="text" class="form-control input-sm" value="{{cmdThatRuns}}">
     </samp>
 </div>
 
@@ -125,7 +129,10 @@
 
           <div class="key-pair" ng-hide="pubKey">
             <div class="h4"> Generate Key Pairs </div>
-            <button ng-click="createSshKey()" type="button" class="btn btn-primary">Generate</button>
+            <button ng-click="createSshKey()" type="button" class="btn btn-primary" ng-disabled="generatingKeys">
+              Generate
+            </button>
+            <img ng-show="generatingKeys" src="img/throbber.gif" class="ng-hide">
           </div>
 
           <div class="key-pair" ng-show="pubKey" ng-show="pubKey">

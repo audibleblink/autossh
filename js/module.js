@@ -1,123 +1,129 @@
-// TODO: makes Service from API caller
-// TODO: creating 'now loading' variables to allow spinners in the GUI
-// TODO: make a dynamic handler function in Service
-// TODO: update known_hosts well on config save (GUI / backend already implemented)
-// TODO: remove unnecessary console loggers
-// TODO: implement 'command will run' bar : global scope?
+// TODO: update known_hosts in gui on config save
 
-registerController('autosshMainCtrl', ['$api', '$scope', function($api, $scope) {
+registerController('autosshMainCtrl', ['$api', '$scope', '$rootScope', function($api, $scope, $rootScope) {
+  // TODO: this should be in a service
+  $rootScope.apiCaller =   function (action, payload, cb) {
+    var options = { module: 'autossh', action: action }
+    if (payload) $.extend(options, payload)
+    $api.request(options, cb)
+  }
+  // TODO: this should be in a service
+  $rootScope.handle = function (updaterFunction) {
+    return function (response) {
+      if (response.success) {
+        updaterFunction()
+      } else {
+        console.error(response)
+      }
+    }
+  }
 
   $scope.isRunning = false
   $scope.isEnabled = false
   $scope.getStatus = function () {
-    apiCaller("status", function(response) {
+    $rootScope.apiCaller("status", null, function(response) {
       if (response.success) {
         $scope.isRunning = response.isRunning
         $scope.isEnabled = response.isEnabled
       }
-      console.log(response)
     })
   }
   $scope.getStatus()
 
   $scope.startAutossh = function () {
-    apiCaller("startAutossh", handler)
+    $rootScope.apiCaller("startAutossh", null, $rootScope.handle($scope.getStatus))
   }
 
   $scope.stopAutossh = function () {
-    apiCaller("stopAutossh", handler)
+    $rootScope.apiCaller("stopAutossh", null, $rootScope.handle($scope.getStatus))
   }
 
   $scope.enableAutossh = function () {
-    apiCaller("enableAutossh", handler)
+    $rootScope.apiCaller("enableAutossh", null, $rootScope.handle($scope.getStatus))
   }
 
   $scope.disableAutossh = function () {
-    apiCaller("disableAutossh", handler)
+    $rootScope.apiCaller("disableAutossh", null, $rootScope.handle($scope.getStatus))
   }
 
-  function handler (response) {
-    if (response.success) {
-      console.log(response)
-      $scope.getStatus()
-    } else {
-      console.error(response)
-    }
-  }
-
-  function apiCaller (action, cb) {
-    $api.request({ module: 'autossh', action: action }, cb)
-  }
 }])
 
+// -
 
-registerController('autosshConfCtrl', ['$api', '$scope', function($api, $scope) {
+registerController('autosshConfCtrl', ['$rootScope','$api', '$scope', function($rootScope, $api, $scope) {
 
   $scope.formData = {}
+  $scope.savingConf = false
 
   $scope.readConf = function () {
-    apiCaller('readConf', function(response) {
+    $rootScope.apiCaller('readConf', null, function(response) {
       if (response.success) {
-        $scope.formData.user  = response.user
-        $scope.formData.host  = response.host
-        $scope.formData.port  = response.port
-        $scope.formData.rport = response.rport
-        $scope.formData.lport = response.lport
+        $scope.formData = {
+          user: response.user,
+          host: response.host,
+          port: response.port,
+          rport: response.rport,
+          lport: response.lport
+        }
+
+        $rootScope.cmdThatRuns = [
+          'autossh -M 20000 -i ~/.ssh/id_rsa.autossh -N -T -R ',
+          $scope.formData.rport,
+          ':localhost:',
+          $scope.formData.lport,
+          ' ',
+          $scope.formData.user,
+          '@',
+          $scope.formData.host,
+          ' -p ',
+          $scope.formData.port
+        ].join('')
+
+
       }
-      console.log(response)
     })
   }
   $scope.readConf()
 
   $scope.writeConf = function () {
-    $api.request({
-      module: "autossh",
-      action: "writeConf",
-      data: $scope.formData
-    }, handler)
+    $scope.savingConf = true
+    $rootScope.apiCaller('writeConf', { data: $scope.formData }, function (response) {
+      $scope.savingConf = false
+      if (response.success) {
+        $scope.readConf()
+      } else {
+        console.error(response.error)
+      }
+    })
   }
 
   $scope.resetConf = function () {
-    apiCaller("resetConf", handler)
-  }
-
-
-  function handler (response) {
-    if (response.success) {
-      console.log(response)
-      $scope.readConf()
-    } else {
-      console.error(response)
-    }
-  }
-
-  function apiCaller (action, cb) {
-    $api.request({ module: 'autossh', action: action }, cb)
+    $rootScope.apiCaller("resetConf", null, $rootScope.handle($scope.readConf))
   }
 
 }])
 
+// -
 
-registerController('firstRunCtrl', ['$api', '$scope', function($api, $scope) {
+registerController('firstRunCtrl', ['$api', '$scope', '$rootScope', function($api, $scope, $rootScope) {
 
   $scope.pubKey = ""
   $scope.knownHosts = ""
-  $scope.sshCopyCommand=""
-  $scope.generatingKeys=false
+  $scope.sshCopyCommand = ""
+  $scope.generatingKeys = false
 
-  $scope.getInfo = function () {
-    apiCaller('getInfo', function(response) {
+  $rootScope.getInfo = function () {
+    $rootScope.apiCaller('getInfo', null, function(response) {
       if (response.success) {
         $scope.pubKey  = response.pubKey
         $scope.knownHosts  = response.knownHosts
         $scope.keyExists = response.keyExists
       }
-      console.log(response)
     })
   }
-  $scope.getInfo()
+  $rootScope.getInfo()
 
-  apiCaller("readConf", function (resp) {
+  $rootScope.apiCaller("readConf",null, function (resp) {
     $scope.sshCopyCommand = "cat ~/.ssh/id_rsa.autossh.pub | \
     ssh -p "+resp.port+" "+resp.user+"@"+resp.host+" \
     'mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys'"
@@ -125,19 +131,14 @@ registerController('firstRunCtrl', ['$api', '$scope', function($api, $scope) {
 
   $scope.createSshKey = function () {
     $scope.generatingKeys=true
-    apiCaller("createSshKey", function(response) {
+    $rootScope.apiCaller("createSshKey", null, function(response) {
       $scope.generatingKeys=false
       if (response.success) {
-        console.log(response)
-        $scope.getInfo()
+        $rootScope.getInfo()
       } else {
         console.error(response)
       }
     })
-  }
-
-  function apiCaller (action, cb) {
-    $api.request({ module: 'autossh', action: action }, cb)
   }
 
 }])
