@@ -87,16 +87,19 @@
                 <label>Local Port</label>
                 <input type="text" class="form-control" placeholder="Local SSH Port" ng-model=formData.lport>
               </div>
-              <div class="col-md-2">
+
+              <div class="col-md-2" style="margin-top: 1.8em;">
                 <button type="submit" class="btn btn-primary btn-block">
                   Save
                   <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
                 </button>
 
               </div>
-              <div class="col-md-2">
+              <div class="col-md-2" style="margin-top: 1.8em;">
                 <button type="button" ng-click="resetConf()" class="btn btn-danger btn-block">Reset</button>
               </div>
+
+
             </div>
 
           </div>
@@ -112,7 +115,7 @@
 </div>
 
 
-<div class="form-group">
+<div class="form-group hidden-xs hidden-sm">
   <samp class="input-group">
       <span class="input-group-addon input-sm">Command that runs</span>
       <input type="text" class="form-control input-sm" value="{{cmdThatRuns}}">
@@ -123,7 +126,7 @@
   <div class="col-md-12">
     <div class="panel panel-default" ng-controller="firstRunCtrl">
 
-      <div class="panel-heading" data-toggle="collapse" data-target="#first-run">
+      <div class="panel-heading" data-toggle="collapse" data-target="#first-run" href="#first-run">
         <h3 class="panel-title">
         Additional Configuration
       </h3>
@@ -141,27 +144,29 @@
             <img ng-show="generatingKeys" src="img/throbber.gif" class="ng-hide">
           </div>
 
-          <div class="key-pair" ng-show="pubKey" ng-show="pubKey">
+          <div class="key-pair " ng-show="pubKey" ng-show="pubKey">
             <div class="h4"> Your Public Key </div>
             <pre style="white-space:normal;min-height: 165px">{{pubKey}}</pre>
             <br>
-            <div class="h4"> Append it to your server </div>
-            <div class="h5"> SSH into the Nano and run this command </div>
-            <pre style="white-space:normal">
-              {{sshCopyCommand}}
-            </pre>
+            <div class="hidden-xs hidden-sm">
+              <div class="h4"> Append it to your server </div>
+              <div class="h5"> SSH into the Nano and run this command </div>
+              <pre style="white-space:normal">
+                {{sshCopyCommand}}
+              </pre>
+            </div>
           </div>
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 hidden-xs hidden-sm">
           <div class="h4"> Known Hosts </div>
           <div class="h5" ng-hide="knownHosts"> Save a configuration above to append it to known_hosts </div>
           <pre id="hosts" ng-show="knownHosts" style="white-space:pre;min-height: 165px">{{knownHosts}}</pre>
         </div>
         <hr>
 
-        <div class="col-md-12">
+        <div class="col-md-12 hidden-xs hidden-sm">
           <hr>
         </div>
 
