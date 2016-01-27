@@ -36,11 +36,8 @@ class autossh extends Module
 
   private function ensureKnownHosts($args)
   {
-    $cmd = "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -p $args->port $args->user@$args->host";
+    $cmd = "ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no -p $args->port $args->user@$args->host exit";
     exec($cmd);
-    if (file_exists('/root/.ssh/known_hosts')) {
-      $this->response = array("success" => true);
-    }
   }
 
   private function getInfo()
@@ -104,7 +101,6 @@ class autossh extends Module
       "port" => (!$args[15]) ? "22" : $args[15],
       "rport" => $args[9],
       "lport" => $args[11],
-      "keyFile" => $args[5],
     );
   }
 
