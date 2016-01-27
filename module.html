@@ -3,7 +3,7 @@
 
 <div class="row">
   <div class="col-md-4">
-    <div class="panel panel-default" ng-controller="autosshMainCtrl">
+    <div class="panel panel-default" style="min-height:226.5px" ng-controller="autosshMainCtrl">
 
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -41,7 +41,7 @@
   </div>
 
   <div class="col-md-8">
-    <div class="panel panel-default" style="min-height:184px" ng-controller="autosshConfCtrl">
+    <div class="panel panel-default" ng-controller="autosshConfCtrl">
 
       <div class="panel-heading">
         <h3 class="panel-title">
@@ -57,14 +57,17 @@
             <div class="col-md-12">
 
               <div class="col-md-3">
+                <label>User</label>
                 <input type="text" class="form-control" placeholder="Username" ng-model=formData.user>
               </div>
 
               <div class="col-md-6">
+                <label>Host</label>
                 <input type="text" class="form-control" placeholder="Hostname or IP" ng-model=formData.host>
               </div>
 
               <div class="col-md-3">
+                <label>Port</label>
                 <input type="text" class="form-control" placeholder="Remote SSH Port" ng-model=formData.port>
               </div>
             </div>
@@ -75,17 +78,20 @@
 
             <div class="col-md-12">
               <div class="col-md-4">
+                <label>Remote Port</label>
+
                 <input type="text" class="form-control" placeholder="Remote Listening Port" ng-model=formData.rport>
               </div>
 
               <div class="col-md-4">
+                <label>Local Port</label>
                 <input type="text" class="form-control" placeholder="Local SSH Port" ng-model=formData.lport>
               </div>
               <div class="col-md-2">
                 <button type="submit" class="btn btn-primary btn-block">
                   Save
-                <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
-              </button>
+                  <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
+                </button>
 
               </div>
               <div class="col-md-2">
@@ -119,7 +125,7 @@
 
       <div class="panel-heading" data-toggle="collapse" data-target="#first-run">
         <h3 class="panel-title">
-        First Run Configuration
+        Additional Configuration
       </h3>
       </div>
 
@@ -155,7 +161,9 @@
         </div>
         <hr>
 
-        <div class="col-md-12"><hr></div>
+        <div class="col-md-12">
+          <hr>
+        </div>
 
         <div class="col-md-12">
           <div class="h4">
@@ -182,3 +190,5 @@
 
       </div>
     </div>
+  </div>
+</div>

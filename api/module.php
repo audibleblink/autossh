@@ -1,6 +1,4 @@
 <?php namespace pineapple;
-// TODO: remove '.test' from file paths before release
-
 
 class autossh extends Module
 {
@@ -70,13 +68,13 @@ class autossh extends Module
 
   private function resetConf()
   {
-    exec("cp /rom/etc/config/autossh /etc/config/autossh.test");
+    exec("cp /rom/etc/config/autossh /etc/config/autossh");
     return $this->response = $this->parsedConfig() + array("success" => true);
   }
 
   private function parsedConfig()
   {
-    $contents = file("/etc/config/autossh.test");
+    $contents = file("/etc/config/autossh");
     $args = preg_split("/\s|\t|:|@|'/", $contents[1]);
     return $this->parseArguments(array_filter($args));
   }
@@ -84,7 +82,7 @@ class autossh extends Module
   private function writeConf()
   {
     $args = $this->request->data;
-    $location = "/etc/config/autossh.test";
+    $location = "/etc/config/autossh";
     $config = $this->buildOptionString($args);
     $this->ensureKnownHosts($args);
     $cmd = "sed \"2s|.*|$config|\" /rom/etc/config/autossh > $location";
