@@ -1,6 +1,6 @@
 {
     "title": "autossh",
-    "description": "Persistant SSH connections",
-    "version": "0.1",
+    "description": "Persistent SSH connections",
+    "version": "1.0",
     "author": "audibleblink"
 }
