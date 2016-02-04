@@ -18,8 +18,15 @@
             <tr class="form-inline">
               <td class="text-muted">autossh</td>
               <td>
-                <button ng-show="isRunning" type="button" class="btn btn-sm btn-danger pull-right" ng-click="stopAutossh()">Stop</button>
-                <button ng-hide="isRunning" type="button" class="btn btn-sm btn-primary pull-right" ng-click="startAutossh()">Start</button>
+                <div class="hidden-xs">
+                  <button ng-show="isRunning" type="button" class="btn btn-sm btn-danger pull-right" ng-click="stopAutossh()">Stop</button>
+                  <button ng-hide="isRunning" type="button" class="btn btn-sm btn-primary pull-right" ng-click="startAutossh()">Start</button>
+                </div>
+                <div class="visible-xs">
+                  <button ng-show="isRunning" type="button" class="btn btn-lg btn-danger pull-right" ng-click="stopAutossh()">Stop</button>
+                  <button ng-hide="isRunning" type="button" class="btn btn-lg btn-primary pull-right" ng-click="startAutossh()">Start</button>
+                </div>
+
               </td>
             </tr>
 
@@ -27,8 +34,14 @@
               <td class="text-muted">Autostart</td>
               <td>
                 <div class="btn-group pull-right">
-                  <button ng-click="enableAutossh()" ng-class="!isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-sm">I</button>
-                  <button ng-click="disableAutossh()" ng-class="!isEnabled ? 'btn-danger' : 'btn-default'" class="btn btn-sm">0</button>
+                  <div class="hidden-xs">
+                    <button ng-click="enableAutossh()" ng-class="!isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-sm">I</button>
+                    <button ng-click="disableAutossh()" ng-class="!isEnabled ? 'btn-danger' : 'btn-default'" class="btn btn-sm">0</button>
+                  </div>
+                  <div class="visible-xs">
+                    <button ng-click="enableAutossh()" ng-class="!isEnabled ? 'btn-default' : 'btn-success'" class="btn btn-lg">I</button>
+                    <button ng-click="disableAutossh()" ng-class="!isEnabled ? 'btn-danger' : 'btn-default'" class="btn btn-lg">0</button>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -88,15 +101,31 @@
                 <input type="text" class="form-control" placeholder="Local SSH Port" ng-model=formData.lport>
               </div>
 
-              <div class="col-md-2" style="margin-top: 1.8em;">
-                <button type="submit" class="btn btn-primary btn-block">
-                  Save
-                  <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
-                </button>
+              <div class="hidden-xs">
 
+                <div class="col-md-2" style="margin-top: 1.8em;">
+                  <button type="submit" class="btn btn-primary btn-block">
+                    Save
+                    <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
+                  </button>
+
+                </div>
+                <div class="col-md-2" style="margin-top: 1.8em;">
+                  <button type="button" ng-click="resetConf()" class="btn btn-danger btn-block">Reset</button>
+                </div>
               </div>
-              <div class="col-md-2" style="margin-top: 1.8em;">
-                <button type="button" ng-click="resetConf()" class="btn btn-danger btn-block">Reset</button>
+              <div class="visible-xs">
+
+                <div class="col-md-2" style="margin-top: 1.8em;">
+                  <button type="submit" class="btn btn-primary btn-lg btn-block">
+                    Save
+                    <img ng-show="savingConf" src="img/throbber.gif" class="ng-hide">
+                  </button>
+
+                </div>
+                <div class="col-md-2" style="margin-top: 1.8em;">
+                  <button type="button" ng-click="resetConf()" class="btn btn-danger btn-lg btn-block">Reset</button>
+                </div>
               </div>
 
 
@@ -118,7 +147,7 @@
 <div class="form-group hidden-xs hidden-sm">
   <samp class="input-group">
       <span class="input-group-addon input-sm">Command that runs</span>
-      <input type="text" class="form-control input-sm" value="{{cmdThatRuns}}">
+      <input type="text" class="form-control input-sm" value="{{cmdThatRuns}}" disabled>
     </samp>
 </div>
 
