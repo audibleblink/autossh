@@ -148,6 +148,10 @@ registerController('firstRunCtrl', ['$api', '$scope', function($api, $scope) {
     })
   }
 
+  $scope.deleteKey = function () {
+    apiCaller("deleteKey", null, handle($scope.getInfo))
+  }
+
   function apiCaller (action, payload, cb) {
     var options = { module: 'autossh', action: action }
     if (payload) $.extend(options, payload)

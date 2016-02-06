@@ -176,6 +176,7 @@
           <div class="key-pair " ng-show="pubKey" ng-show="pubKey">
             <div class="h4"> Your Public Key </div>
             <pre style="white-space:normal;min-height: 165px">{{pubKey}}</pre>
+            <button type="button" class="btn btn-block btn-danger" ng-click="deleteKey()">Delete/Regenerate Keys</button>
             <br>
             <div class="hidden-xs hidden-sm">
               <div class="h4"> Append it to your server </div>

@@ -46,6 +46,10 @@ class autossh extends Module
       $this->createSshKey();
       break;
 
+      case 'deleteKey':
+      $this->deleteKey();
+      break;
+
     }
 
   }
@@ -58,6 +62,12 @@ class autossh extends Module
     if (file_exists($path)) {
       $this->response = array("success" => true);
     }
+  }
+
+  private function deleteKey()
+  {
+    exec('rm /root/.ssh/id_rsa.autossh*');
+    $this->response = array("success" => true);
   }
 
   private function ensureKnownHosts($args)
